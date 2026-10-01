@@ -1,6 +1,7 @@
 package com.feima.movemod.event;
 
 import com.feima.movemod.FeimaMoveMod;
+import com.feima.movemod.action.CrawlAction;
 import com.feima.movemod.action.SlideAction;
 import com.feima.movemod.action.StaminaTracker;
 import net.minecraft.world.entity.player.Player;
@@ -10,12 +11,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.UUID;
 
-/**
- * 服务端玩家离线时清理所有状态 Map，避免长期运行的内存泄漏。
- *
- * 客户端侧的清理在 {@link com.feima.movemod.client.SlideAnimationController}
- * 里通过 ClientPlayerNetworkEvent.LoggingOut 处理。
- */
 @Mod.EventBusSubscriber(modid = FeimaMoveMod.MODID)
 public final class PlayerCleanupHandler {
 
@@ -31,5 +26,6 @@ public final class PlayerCleanupHandler {
     private static void forgetAll(UUID id) {
         SlideAction.INSTANCE.forget(id);
         StaminaTracker.INSTANCE.forget(id);
+        CrawlAction.INSTANCE.forget(id);
     }
 }

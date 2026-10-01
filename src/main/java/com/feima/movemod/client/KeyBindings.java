@@ -10,11 +10,19 @@ public final class KeyBindings {
 
     public static final String CATEGORY = "key.categories.feimamovemod";
 
-    /** 滑铲，默认 V 键 */
+    /** 滑铲，默认 C 键 */
     public static final KeyMapping SLIDE = new KeyMapping(
             "key.feimamovemod.slide",
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_V,
+            GLFW.GLFW_KEY_C,
+            CATEGORY
+    );
+
+    /** 趴下，默认 Z 键 */
+    public static final KeyMapping CRAWL = new KeyMapping(
+            "key.feimamovemod.crawl",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_Z,
             CATEGORY
     );
 }

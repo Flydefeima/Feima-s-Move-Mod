@@ -1,6 +1,7 @@
 package com.feima.movemod.client;
 
 import com.feima.movemod.FeimaMoveMod;
+import com.feima.movemod.action.CrawlAction;
 import com.feima.movemod.action.SlideAction;
 import com.feima.movemod.action.StaminaTracker;
 import com.feima.movemod.config.MoveConfig;
@@ -62,7 +63,6 @@ public final class SlideAnimationController {
         }
     }
 
-    /** 客户端离线清理：删除客户端所有与该玩家相关的状态 */
     @SubscribeEvent
     public static void onClientLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         if (event.getPlayer() == null) return;
@@ -70,6 +70,7 @@ public final class SlideAnimationController {
         forget(id);
         SlideAction.INSTANCE.forget(id);
         StaminaTracker.INSTANCE.forget(id);
+        CrawlAction.INSTANCE.forget(id);
     }
 
     public static void forget(UUID id) {

@@ -1,6 +1,7 @@
 package com.feima.movemod.client;
 
 import com.feima.movemod.FeimaMoveMod;
+import com.feima.movemod.action.CrawlAction;
 import com.feima.movemod.action.SlideAction;
 import com.feima.movemod.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,7 @@ public final class ClientInputHandler {
 
     private ClientInputHandler() {}
 
-    /** 用于跳跃键的边沿检测 */
+    /** 跳跃键的边沿检测 */
     private static boolean wasJumpDown = false;
 
     @SubscribeEvent
@@ -25,20 +26,27 @@ public final class ClientInputHandler {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
 
-        // ---- 滑铲键 ----
+        // ---- 滑铲键（C）----
+        // 只有本地预检通过才发包；本地拒绝则一切都不发生（服务端不会接到请求）。
         while (KeyBindings.SLIDE.consumeClick()) {
-            if (player != null) {
-                // 乐观预测：本地立即开始，视觉零延迟
-                SlideAction.INSTANCE.tryStartClient(player);
+            if (player != null && SlideAction.INSTANCE.tryStartClient(player)) {
+                NetworkHandler.sendSlide();
             }
-            // 通知服务端；服务端回执（接受→广播 true；拒绝→发 false + 权威耐力）
-            NetworkHandler.sendSlide();
+        }
+
+        // ---- 趴下键（Z，切换式）----
+        while (KeyBindings.CRAWL.consumeClick()) {
+            if (player == null) break;
+
+            if (CrawlAction.INSTANCE.isCrawling(player)) {
+                CrawlAction.INSTANCE.stopClient(player);
+                NetworkHandler.sendCrawlSet(false);
+            } else if (CrawlAction.INSTANCE.tryStartClient(player)) {
+                NetworkHandler.sendCrawlSet(true);
+            }
         }
 
         // ---- 跳跃键（滑铲跳）----
-        // LivingJumpEvent 在某些 Forge 版本客户端不触发，
-        // 这里用 keyJump 边沿检测兜底：本地立即结束滑铲并应用滑铲跳速度，
-        // 同时发一个包让服务端立即同步执行，避免 RTT 期间的视觉延迟。
         boolean jumpDown = mc.options.keyJump.isDown();
         if (jumpDown && !wasJumpDown && player != null
                 && SlideAction.INSTANCE.isSliding(player)) {

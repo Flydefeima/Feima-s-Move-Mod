@@ -34,6 +34,10 @@ public final class NetworkHandler {
                 SlideStatePacket::encode, SlideStatePacket::decode, SlideStatePacket::handle);
         CHANNEL.registerMessage(id++, SlideJumpPacket.class,
                 SlideJumpPacket::encode, SlideJumpPacket::decode, SlideJumpPacket::handle);
+        CHANNEL.registerMessage(id++, CrawlSetPacket.class,
+                CrawlSetPacket::encode, CrawlSetPacket::decode, CrawlSetPacket::handle);
+        CHANNEL.registerMessage(id++, CrawlStatePacket.class,
+                CrawlStatePacket::encode, CrawlStatePacket::decode, CrawlStatePacket::handle);
     }
 
     // ============================================================
@@ -47,17 +51,19 @@ public final class NetworkHandler {
         CHANNEL.sendToServer(new SlideJumpPacket());
     }
 
+    public static void sendCrawlSet(boolean crawling) {
+        CHANNEL.sendToServer(new CrawlSetPacket(crawling));
+    }
+
     // ============================================================
     // S2C
     // ============================================================
-    /** 广播滑铲状态给所有追踪该实体的人（含实体本身） */
     public static void broadcastSlideState(Entity entity, boolean sliding) {
         double stamina = 0.0D;
         double speed = 0.0D;
         if (entity instanceof Player p) {
             stamina = StaminaTracker.INSTANCE.get(p);
             if (sliding) {
-                // 只有进入滑铲时才有意义的“实际使用速度”
                 speed = SlideAction.INSTANCE.currentSpeed(p);
             }
         }
@@ -67,13 +73,26 @@ public final class NetworkHandler {
         );
     }
 
-    /** 只发给指定玩家（用于拒绝回执） */
     public static void sendSlideReject(ServerPlayer player) {
         UUID id = player.getUUID();
         double stamina = StaminaTracker.INSTANCE.get(player);
         CHANNEL.send(
                 PacketDistributor.PLAYER.with(() -> player),
                 new SlideStatePacket(id, false, stamina, 0.0D)
+        );
+    }
+
+    public static void broadcastCrawlState(Entity entity, boolean crawling) {
+        CHANNEL.send(
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
+                new CrawlStatePacket(entity.getUUID(), crawling)
+        );
+    }
+
+    public static void sendCrawlReject(ServerPlayer player) {
+        CHANNEL.send(
+                PacketDistributor.PLAYER.with(() -> player),
+                new CrawlStatePacket(player.getUUID(), false)
         );
     }
 }

@@ -18,5 +18,6 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(KeyBindings.SLIDE);
+        event.register(KeyBindings.CRAWL);
     }
 }

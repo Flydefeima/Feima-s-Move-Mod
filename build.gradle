@@ -9,7 +9,7 @@ ext {
 }
 
 group            = 'com.feima.movemod'
-version          = '1.0.0-alpha'
+version          = '1.0.0-alpha-1'
 
 base {
     archivesName = 'feimamovemod-forge-1.20.1'

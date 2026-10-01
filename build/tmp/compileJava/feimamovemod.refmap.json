@@ -1,5 +1,8 @@
 {
   "mappings": {
+    "com/feima/movemod/mixin/PlayerPoseMixin": {
+      "updatePlayerPose": "Lnet/minecraft/world/entity/player/Player;m_7594_()V"
+    },
     "com/feima/movemod/mixin/PlayerSlideMixin": {
       "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V"
     },
@@ -18,6 +21,9 @@
   },
   "data": {
     "searge": {
+      "com/feima/movemod/mixin/PlayerPoseMixin": {
+        "updatePlayerPose": "Lnet/minecraft/world/entity/player/Player;m_7594_()V"
+      },
       "com/feima/movemod/mixin/PlayerSlideMixin": {
         "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V"
       },
