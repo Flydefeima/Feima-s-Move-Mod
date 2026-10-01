@@ -1,0 +1,38 @@
+{
+  "mappings": {
+    "com/feima/movemod/mixin/PlayerSlideMixin": {
+      "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V"
+    },
+    "com/feima/movemod/mixin/SlideTravelMixin": {
+      "travel": "Lnet/minecraft/world/entity/LivingEntity;m_7023_(Lnet/minecraft/world/phys/Vec3;)V"
+    },
+    "com/feima/movemod/mixin/PlayerHitboxMixin": {
+      "getDimensions": "Lnet/minecraft/world/entity/player/Player;m_6972_(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions;"
+    },
+    "com/feima/movemod/mixin/EyeHeightMixin": {
+      "getEyeHeight": "Lnet/minecraft/world/entity/LivingEntity;m_6380_(Lnet/minecraft/world/entity/Pose;Lnet/minecraft/world/entity/EntityDimensions;)F"
+    },
+    "com/feima/movemod/mixin/SlideSprintBlockMixin": {
+      "setSprinting": "Lnet/minecraft/world/entity/LivingEntity;m_6858_(Z)V"
+    }
+  },
+  "data": {
+    "searge": {
+      "com/feima/movemod/mixin/PlayerSlideMixin": {
+        "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V"
+      },
+      "com/feima/movemod/mixin/SlideTravelMixin": {
+        "travel": "Lnet/minecraft/world/entity/LivingEntity;m_7023_(Lnet/minecraft/world/phys/Vec3;)V"
+      },
+      "com/feima/movemod/mixin/PlayerHitboxMixin": {
+        "getDimensions": "Lnet/minecraft/world/entity/player/Player;m_6972_(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions;"
+      },
+      "com/feima/movemod/mixin/EyeHeightMixin": {
+        "getEyeHeight": "Lnet/minecraft/world/entity/LivingEntity;m_6380_(Lnet/minecraft/world/entity/Pose;Lnet/minecraft/world/entity/EntityDimensions;)F"
+      },
+      "com/feima/movemod/mixin/SlideSprintBlockMixin": {
+        "setSprinting": "Lnet/minecraft/world/entity/LivingEntity;m_6858_(Z)V"
+      }
+    }
+  }
+}

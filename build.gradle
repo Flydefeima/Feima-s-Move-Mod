@@ -1,0 +1,89 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '6.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+ext {
+    minecraft_version = '1.20.1'
+    forge_version     = '47.3.0'
+}
+
+group            = 'com.feima.movemod'
+version          = '1.0.0-alpha'
+
+base {
+    archivesName = 'feimamovemod-forge-1.20.1'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.mojang_level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            mods { feimamovemod { source sourceSets.main } }
+        }
+        server {
+            workingDirectory project.file('run/server')
+            property 'forge.logging.mojang_level', 'debug'
+            mods { feimamovemod { source sourceSets.main } }
+        }
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.mojang_level', 'debug'
+            args '--mod', 'feimamovemod', '--all',
+                 '--output', file('src/generated/resources/'),
+                 '--existing', file('src/main/resources/')
+            mods { feimamovemod { source sourceSets.main } }
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, 'feimamovemod.refmap.json'
+    config 'feimamovemod.mixins.json'
+}
+
+repositories {
+    mavenCentral()
+    maven { url = uri('libs') }
+    maven {
+        name = "KosmX's maven"
+        url = 'https://maven.kosmx.dev/'
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:1.0.2-rc1+1.20")
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "feimamovemod",
+                "Specification-Vendor"    : "Feima",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.version,
+                "Implementation-Vendor"   : "Feima",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs"            : "feimamovemod.mixins.json",
+                "License"                 : "MIT"
+        ])
+    }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
