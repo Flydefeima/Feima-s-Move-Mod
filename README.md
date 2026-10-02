@@ -95,21 +95,96 @@ Tune it your way in `config/feimamovemod-common.toml`.
 
 在 `config/feimamovemod-common.toml` 中按你的手感调整。
 
-| Option | Default | Description |
-|:---|:---:|:---|
-| `slide.enabled` | `true` | 滑铲总开关 / Master switch |
-| `slide.requireSprint` | `false` | 必须疾跑才能滑铲 / Require sprinting |
-| `slide.allowWhenEmpty` | `true` | 零耐力也能滑铲（降为三档）/ Allow sliding at zero stamina |
-| `slide.startSpeed` | `0.6` | I 档初速度 / Tier-I initial speed |
-| `slide.decayDelay` | `3` | 开始衰减前的保持 tick / Ticks before decay |
-| `slide.friction` | `0.9` | 每 tick 衰减系数 / Per-tick decay factor |
-| `slide.endSpeed` | `0.2` | 低于此值结束滑铲 / End slide threshold |
-| `slide.slideTriggerCd` | `22` | 两次滑铲的最短间隔 / Cooldown |
-| `slide.requireSprint` | `false` | 需疾跑触发 / Require sprint |
-| `slide.hungerEnabled` | `false` | 消耗饱食度 / Hunger cost |
-| `crawl.enabled` | `true` | 趴下总开关 / Crawl master switch |
+### Slide
 
-Nested groups: `slide.steering` · `slide.jump` · `slide.stamina` · `slide.stamina.display` · `slide.hitbox`.
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.enabled` | Boolean | `true` | `true` / `false` | Master switch for sliding. |
+| `slide.requireSprint` | Boolean | `false` | `true` / `false` | If true, the player must be sprinting to trigger a slide. |
+| `slide.allowWhenEmpty` | Boolean | `true` | `true` / `false` | If true, sliding is allowed at 0 stamina and speed drops to tier 3 (slowest). If false, insufficient stamina prevents sliding. |
+| `slide.startSpeed` | Double | `0.6` | `0.0`–`5.0` | Tier 1 initial speed (blocks/tick). |
+| `slide.decayDelay` | Integer | `3` | `0`–`200` | Ticks to hold speed before decay starts. |
+| `slide.friction` | Double | `0.9` | `0.0`–`1.0` | Speed decay factor per tick. |
+| `slide.endSpeed` | Double | `0.2` | `0.0`–`5.0` | End speed. Slide ends when speed drops to this value or below. |
+| `slide.slideTriggerCd` | Integer | `22` | `0`–`200` | Minimum cooldown between slide starts (ticks). |
+
+### Slide - Steering
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.steering.followLook` | Boolean | `true` | `true` / `false` | Whether look direction can affect slide direction. |
+| `slide.steering.turnFactor` | Double | `0.5` | `0.0`–`1.0` | Ratio of direction following look direction. |
+| `slide.steering.maxTurnOffset` | Double | `45.0` | `0.0`–`180.0` | Maximum offset angle relative to initial direction (degrees). |
+| `slide.steering.turnOffsetZeroYaw` | Double | `120.0` | `0.0`–`180.0` | If look offset exceeds this angle, target direction is zeroed (degrees). |
+| `slide.steering.turnSpeed` | Double | `3.0` | `0.0`–`30.0` | Maximum angular speed for direction to catch up to look direction (degrees/tick). |
+
+### Slide - Jump
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.jump.slideJumpForward` | Double | `1.0` | `0.0`–`5.0` | Horizontal speed (blocks/tick). |
+| `slide.jump.slideJumpUp` | Double | `0.42` | `0.0`–`5.0` | Upward speed (blocks/tick). |
+| `slide.jump.slideJumpFollowLook` | Boolean | `true` | `true` / `false` | If true, use current look direction. If false, use initial slide direction. |
+
+### Slide - Stamina
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.stamina.enabled` | Boolean | `true` | `true` / `false` | Enable stamina. |
+| `slide.stamina.max` | Double | `100.0` | `1.0`–`10000.0` | Maximum stamina. |
+| `slide.stamina.costOnStart` | Double | `20.0` | `0.0`–`10000.0` | One-time stamina cost on slide start. |
+| `slide.stamina.costPerTick` | Double | `0.4` | `0.0`–`100.0` | Stamina cost per tick while sliding. |
+| `slide.stamina.regenPerTick` | Double | `0.6` | `0.0`–`100.0` | Stamina regenerated per tick. |
+| `slide.stamina.regenDelayTicks` | Integer | `20` | `0`–`400` | Delay after stamina use stops before regeneration begins (ticks). |
+
+### Slide - Stamina Thresholds
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.stamina.thresholds.level1` | Double | `0.6` | `0.0`–`1.0` | Tier 1 threshold (stamina ratio 0–1). |
+| `slide.stamina.thresholds.level2` | Double | `0.3` | `0.0`–`1.0` | Tier 2 threshold (stamina ratio 0–1). |
+
+### Slide - Stamina Speeds
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.stamina.speeds.level2Speed` | Double | `0.45` | `0.0`–`5.0` | Tier 2 speed (blocks/tick). |
+| `slide.stamina.speeds.level3Speed` | Double | `0.3` | `0.0`–`5.0` | Tier 3 speed (blocks/tick). |
+
+### Slide - Stamina Display
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.stamina.display.enabled` | Boolean | `true` | `true` / `false` | Enable stamina display. |
+| `slide.stamina.display.mode` | String | `"value"` | `value`, `valueMax`, `percent`, `level` | Display format. |
+| `slide.stamina.display.alwaysShow` | Boolean | `false` | `true` / `false` | If true, always visible. If false, shown briefly after changes then fades out. |
+| `slide.stamina.display.holdTicks` | Integer | `20` | `0`–`400` | Time to remain opaque (ticks). |
+| `slide.stamina.display.fadeTicks` | Integer | `20` | `0`–`400` | Fade-out time (ticks). |
+| `slide.stamina.display.position` | String | `"bottom"` | `center`, `bottom`, `topLeft`, `topRight` | Display position. |
+| `slide.stamina.display.scale` | Double | `1.5` | `0.5`–`10.0` | Text scale. |
+| `slide.stamina.display.color` | String | `"#FFFFFF"` | `#RRGGBB` | Text color. |
+| `slide.stamina.display.shadow` | Boolean | `true` | `true` / `false` | Draw text shadow. |
+
+### Slide - Hunger
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.hungerEnabled` | Boolean | `false` | `true` / `false` | Enable hunger/exhaustion consumption while sliding. |
+| `slide.hungerPerTick` | Double | `0.1` | `0.0`–`10.0` | Exhaustion added per tick while sliding. |
+
+### Slide - Hitbox
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `slide.hitbox.hitboxWidth` | Double | `0.6` | `0.0`–`5.0` | Slide hitbox width. |
+| `slide.hitbox.hitboxHeight` | Double | `0.6` | `0.0`–`5.0` | Slide hitbox height. |
+| `slide.hitbox.eyeHeight` | Double | `0.5` | `0.0`–`5.0` | Eye height while sliding. |
+
+### Crawl
+
+| Option | Type | Default | Range / Values | Description |
+| --- | --- | --- | --- | --- |
+| `crawl.enabled` | Boolean | `true` | `true` / `false` | Master switch for crawling. |
 
 ---
 
